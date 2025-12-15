@@ -91,7 +91,7 @@ include_once 'proc/index_proc.php';
                 <a href="./view/ver_sala.php?id_sala=<?= $sala['id'] ?>" class="sala-card-link">
                     
                     <div class="sala-card" 
-                         style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('<?= $sala['imagen'] ?>');">
+                         style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('<?= $sala['imagen'] ?>?v=<?= time() ?>');">
                         
                         <h3 class="sala-name"><?= htmlspecialchars($sala['sala']) ?></h3>
                         

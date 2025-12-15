@@ -105,8 +105,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $fileName = $_FILES['imagen_file']['name'];
             $fileSize = $_FILES['imagen_file']['size'];
             $fileType = $_FILES['imagen_file']['type'];
-            $fileNameCmps = explode(".", $fileName);
-            $fileExtension = strtolower(end($fileNameCmps));
+            $fileExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
             
             $allowedfileExtensions = array('jpg', 'gif', 'png', 'jpeg', 'webp');
             if (in_array($fileExtension, $allowedfileExtensions)) {
@@ -174,8 +173,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $fileName = $_FILES['imagen_file']['name'];
             $fileSize = $_FILES['imagen_file']['size'];
             $fileType = $_FILES['imagen_file']['type'];
-            $fileNameCmps = explode(".", $fileName);
-            $fileExtension = strtolower(end($fileNameCmps));
+            $fileExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
             
             $allowedfileExtensions = array('jpg', 'gif', 'png', 'jpeg', 'webp');
             if (in_array($fileExtension, $allowedfileExtensions)) {

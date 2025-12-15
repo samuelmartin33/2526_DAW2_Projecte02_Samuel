@@ -75,9 +75,13 @@ $clientes = $stmt_clientes->fetchAll(PDO::FETCH_ASSOC);
             width: 100%;
             height: 75vh; 
             background-image: url('<?php
-                $nombre_img = strtolower(str_replace(' ', '', $sala_info['nombre'])) . '.png';
-                $ruta_img = "../img/" . $nombre_img;
-                echo file_exists($ruta_img) ? $ruta_img : "../img/fondo_panel_principal.png";
+                if (!empty($sala_info['imagen'])) {
+                    echo "../" . $sala_info['imagen'];
+                } else {
+                    $nombre_img = strtolower(str_replace(' ', '', $sala_info['nombre'])) . '.png';
+                    $ruta_img = "../img/" . $nombre_img;
+                    echo file_exists($ruta_img) ? $ruta_img : "../img/fondo_panel_principal.png";
+                }
             ?>'); 
             background-size: 100% 100%;
             background-repeat: no-repeat;

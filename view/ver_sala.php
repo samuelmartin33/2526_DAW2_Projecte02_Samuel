@@ -47,16 +47,20 @@ $clientes = $stmt_clientes->fetchAll(PDO::FETCH_ASSOC);
             width: 100%;
             height: 80vh; /* Altura fija para el área de trabajo */
             background-image: url('<?php
-                // Lógica para asignar imagen de fondo según el nombre de la sala
-                // Ejemplo: "Terraza 1" -> "terraza1.png"
-                $nombre_img = strtolower(str_replace(' ', '', $sala_info['nombre'])) . '.png';
-                $ruta_img = "../img/" . $nombre_img;
-                
-                // Si la imagen específica existe, la usamos. Si no, usamos la genérica.
-                if (file_exists($ruta_img)) {
-                    echo $ruta_img;
+                // Lógica para asignar imagen de fondo
+                // PRIORIDAD 1: Imagen definida en BBDD (subida por Admin)
+                if (!empty($sala_info['imagen'])) {
+                    echo "../" . $sala_info['imagen'];
                 } else {
-                    echo "../img/fondo_panel_principal.png";
+                    // PRIORIDAD 2: Fallback antiguo
+                    $nombre_img = strtolower(str_replace(' ', '', $sala_info['nombre'])) . '.png';
+                    $ruta_img = "../img/" . $nombre_img;
+                    
+                    if (file_exists($ruta_img)) {
+                        echo $ruta_img;
+                    } else {
+                        echo "../img/fondo_panel_principal.png";
+                    }
                 }
             ?>'); /* Fondo dinámico */
             background-size: 100% 100%;
