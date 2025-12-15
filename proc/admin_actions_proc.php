@@ -13,22 +13,55 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $id = $_POST['id'] ?? '';
 
     if ($action === 'edit_user' && !empty($id)) {
+        $username = trim($_POST['username'] ?? '');
+        $nombre = trim($_POST['nombre'] ?? '');
+        $apellido = trim($_POST['apellido'] ?? '');
+        $email = trim($_POST['email'] ?? '');
         $rol = $_POST['rol'] ?? '';
+        $password = $_POST['password'] ?? ''; 
         
+        // Basic validation
+        if (empty($username) || empty($nombre) || empty($email)) {
+            header("Location: ../view/admin_panel.php?error=empty_fields");
+            exit;
+        }
+
         // Validate rol (1=Camarero, 4=Mantenimiento, 5=Jefe)
         $allowed_roles = ['1', '4', '5'];
         if (in_array($rol, $allowed_roles)) {
             try {
-                $sql = "UPDATE users SET rol = :rol WHERE id = :id";
-                $stmt = $conn->prepare($sql);
+                if (!empty($password)) {
+                    // Update WITH password
+                    // Password must be hashed. Assuming password_hash() default (bcrypt)
+                    $password_hash = password_hash($password, PASSWORD_DEFAULT);
+                    
+                    $sql = "UPDATE users SET username = :username, nombre = :nombre, apellido = :apellido, email = :email, rol = :rol, password_hash = :pass WHERE id = :id";
+                    $stmt = $conn->prepare($sql);
+                    $stmt->bindParam(':pass', $password_hash);
+                } else {
+                    // Update WITHOUT password
+                    $sql = "UPDATE users SET username = :username, nombre = :nombre, apellido = :apellido, email = :email, rol = :rol WHERE id = :id";
+                    $stmt = $conn->prepare($sql);
+                }
+                
+                $stmt->bindParam(':username', $username);
+                $stmt->bindParam(':nombre', $nombre);
+                $stmt->bindParam(':apellido', $apellido);
+                $stmt->bindParam(':email', $email);
                 $stmt->bindParam(':rol', $rol);
                 $stmt->bindParam(':id', $id);
+                
                 $stmt->execute();
                 
                 header("Location: ../view/admin_panel.php?status=success_user");
                 exit;
             } catch (PDOException $e) {
-                header("Location: ../view/admin_panel.php?error=db_error");
+                // Check if duplicate entry (e.g. username/email)
+                if ($e->errorInfo[1] == 1062) {
+                     header("Location: ../view/admin_panel.php?error=duplicate_entry");
+                } else {
+                     header("Location: ../view/admin_panel.php?error=db_error");
+                }
                 exit;
             }
         } else {

@@ -185,8 +185,11 @@ $role_names = [
                                 <button class="btn-icon-wrapper edit-user-btn" 
                                         data-id="<?php echo $user['id']; ?>"
                                         data-user="<?php echo htmlspecialchars($user['username']); ?>"
+                                        data-nombre="<?php echo htmlspecialchars($user['nombre']); ?>"
+                                        data-apellido="<?php echo htmlspecialchars($user['apellido']); ?>"
+                                        data-email="<?php echo htmlspecialchars($user['email']); ?>"
                                         data-rol="<?php echo $user['rol']; ?>"
-                                        title="Editar Rol">
+                                        title="Editar Usuario">
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </button>
                                 
@@ -281,25 +284,47 @@ $role_names = [
 
     <!-- Modal Editar Usuario -->
     <div id="modalUser" class="modal">
-        <div class="modal-content glass-card">
+        <div class="modal-content glass-card" style="max-height:90vh; overflow-y:auto;">
             <span class="close-btn" onclick="closeModal('modalUser')">&times;</span>
-            <h2>Editar Rol de Usuario</h2>
+            <h2>Editar Usuario</h2>
             <form action="../proc/admin_actions_proc.php" method="POST">
                 <input type="hidden" name="action" value="edit_user">
                 <input type="hidden" name="id" id="edit_user_id">
                 
-                <div class="form-group">
-                    <label>Usuario</label>
-                    <input type="text" id="edit_user_username" disabled class="input-disabled">
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        <label>Usuario</label>
+                        <input type="text" name="username" id="edit_user_username" class="futuristic-input" required>
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label>Rol</label>
+                        <select name="rol" id="edit_user_rol" class="futuristic-input">
+                            <option value="1">Camarero</option>
+                            <option value="5">Jefe de Sala</option>
+                            <option value="4">Mantenimiento</option>
+                        </select>
+                    </div>
                 </div>
-                
+
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        <label>Nombre</label>
+                        <input type="text" name="nombre" id="edit_user_nombre" class="futuristic-input" required>
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label>Apellido</label>
+                        <input type="text" name="apellido" id="edit_user_apellido" class="futuristic-input">
+                    </div>
+                </div>
+
                 <div class="form-group">
-                    <label>Rol</label>
-                    <select name="rol" id="edit_user_rol" class="futuristic-input">
-                        <option value="1">Camarero</option>
-                        <option value="5">Jefe de Sala</option>
-                        <option value="4">Mantenimiento</option>
-                    </select>
+                    <label>Email</label>
+                    <input type="email" name="email" id="edit_user_email" class="futuristic-input" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Nueva Contraseña (Opcional)</label>
+                    <input type="password" name="password" id="edit_user_password" class="futuristic-input" placeholder="Dejar en blanco para mantener la actual">
                 </div>
                 
                 <button type="submit" class="btn-submit">Guardar Cambios</button>
@@ -354,7 +379,14 @@ $role_names = [
             btn.addEventListener('click', () => {
                 document.getElementById('edit_user_id').value = btn.dataset.id;
                 document.getElementById('edit_user_username').value = btn.dataset.user;
+                document.getElementById('edit_user_nombre').value = btn.dataset.nombre;
+                document.getElementById('edit_user_apellido').value = btn.dataset.apellido;
+                document.getElementById('edit_user_email').value = btn.dataset.email;
                 document.getElementById('edit_user_rol').value = btn.dataset.rol;
+                
+                // Clear password field
+                document.getElementById('edit_user_password').value = "";
+                
                 modalUser.style.display = 'flex';
             });
         });
