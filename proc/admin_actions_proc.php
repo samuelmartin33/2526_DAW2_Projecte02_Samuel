@@ -96,11 +96,43 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     } elseif ($action === 'create_sala') {
         $nombre = trim($_POST['nombre'] ?? '');
+        
+        $imagen_db = null; // Default null or a default image path?
+        
+        // Handle File Upload
+        if (isset($_FILES['imagen_file']) && $_FILES['imagen_file']['error'] === UPLOAD_ERR_OK) {
+            $fileTmpPath = $_FILES['imagen_file']['tmp_name'];
+            $fileName = $_FILES['imagen_file']['name'];
+            $fileSize = $_FILES['imagen_file']['size'];
+            $fileType = $_FILES['imagen_file']['type'];
+            $fileNameCmps = explode(".", $fileName);
+            $fileExtension = strtolower(end($fileNameCmps));
+            
+            $allowedfileExtensions = array('jpg', 'gif', 'png', 'jpeg', 'webp');
+            if (in_array($fileExtension, $allowedfileExtensions)) {
+                $newFileName = md5(time() . $fileName) . '.' . $fileExtension;
+                $uploadFileDir = '../img/';
+                $dest_path = $uploadFileDir . $newFileName;
+                
+                if(move_uploaded_file($fileTmpPath, $dest_path)) {
+                    $imagen_db = 'img/' . $newFileName; 
+                } else {
+                     header("Location: ../view/admin_panel.php?error=upload_failed");
+                     exit;
+                }
+            } else {
+                header("Location: ../view/admin_panel.php?error=invalid_file_type");
+                exit;
+            }
+        }
+
         if (!empty($nombre)) {
             try {
-                $sql = "INSERT INTO salas (nombre) VALUES (:nombre)";
+                // Insert name AND imagen
+                $sql = "INSERT INTO salas (nombre, imagen) VALUES (:nombre, :imagen)";
                 $stmt = $conn->prepare($sql);
                 $stmt->bindParam(':nombre', $nombre);
+                $stmt->bindParam(':imagen', $imagen_db);
                 $stmt->execute();
                 
                 header("Location: ../view/admin_panel.php?status=success_create_sala");
@@ -134,11 +166,50 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     } elseif ($action === 'edit_sala' && !empty($id)) {
         $nombre = trim($_POST['nombre'] ?? '');
+        
+        // Handle File Upload
+        $imagen_db = null;
+        if (isset($_FILES['imagen_file']) && $_FILES['imagen_file']['error'] === UPLOAD_ERR_OK) {
+            $fileTmpPath = $_FILES['imagen_file']['tmp_name'];
+            $fileName = $_FILES['imagen_file']['name'];
+            $fileSize = $_FILES['imagen_file']['size'];
+            $fileType = $_FILES['imagen_file']['type'];
+            $fileNameCmps = explode(".", $fileName);
+            $fileExtension = strtolower(end($fileNameCmps));
+            
+            $allowedfileExtensions = array('jpg', 'gif', 'png', 'jpeg', 'webp');
+            if (in_array($fileExtension, $allowedfileExtensions)) {
+                // Sanitize filename
+                $newFileName = md5(time() . $fileName) . '.' . $fileExtension;
+                $uploadFileDir = '../img/';
+                $dest_path = $uploadFileDir . $newFileName;
+                
+                if(move_uploaded_file($fileTmpPath, $dest_path)) {
+                    // Success, saved in ../img/, in DB we store img/filename
+                    $imagen_db = 'img/' . $newFileName; 
+                } else {
+                     header("Location: ../view/admin_panel.php?error=upload_failed");
+                     exit;
+                }
+            } else {
+                header("Location: ../view/admin_panel.php?error=invalid_file_type");
+                exit;
+            }
+        }
 
         if (!empty($nombre)) {
              try {
-                $sql = "UPDATE salas SET nombre = :nombre WHERE id = :id";
-                $stmt = $conn->prepare($sql);
+                if ($imagen_db) {
+                     // Update Name AND Image
+                     $sql = "UPDATE salas SET nombre = :nombre, imagen = :imagen WHERE id = :id";
+                     $stmt = $conn->prepare($sql);
+                     $stmt->bindParam(':imagen', $imagen_db);
+                } else {
+                     // Update only Name
+                     $sql = "UPDATE salas SET nombre = :nombre WHERE id = :id";
+                     $stmt = $conn->prepare($sql);
+                }
+                
                 $stmt->bindParam(':nombre', $nombre);
                 $stmt->bindParam(':id', $id);
                 $stmt->execute();

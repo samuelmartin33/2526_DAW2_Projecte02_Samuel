@@ -82,6 +82,9 @@ CREATE TABLE IF NOT EXISTS ocupaciones (
 ALTER TABLE mesas ADD COLUMN pos_x FLOAT DEFAULT 50;
 ALTER TABLE mesas ADD COLUMN pos_y FLOAT DEFAULT 50;
 
+
+ALTER TABLE salas ADD COLUMN imagen VARCHAR(255) NULL;
+
 -- ==========================================
 --   INSERTS: USERS
 -- ==========================================

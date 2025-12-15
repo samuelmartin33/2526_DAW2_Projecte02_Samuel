@@ -36,6 +36,7 @@ try {
         SELECT 
             s.id AS id_sala,
             s.nombre AS sala_nombre,
+            s.imagen,
             COUNT(m.id) AS total_mesas,
             SUM(CASE WHEN m.estado = 2 THEN 1 ELSE 0 END) AS mesas_ocupadas
         FROM salas s
@@ -71,17 +72,27 @@ try {
         $total_sillas += intval($sillas['total_sillas']);
         $sillas_ocupadas += intval($sillas['sillas_ocupadas']);
 
-        // --- CORRECCIÓN CLAVE: GENERAR LA IMAGEN ---
-        // Generamos el nombre: "Terraza 1" -> "terraza1"
-        $nombre_img = strtolower(str_replace(' ', '', $s['sala_nombre']));
-        // Ruta relativa desde la raíz: "img/terraza1.png"
-        $ruta_imagen = "img/" . $nombre_img . ".png";
+        // --- GESTIÓN DE LA IMAGEN ---
+        if (!empty($s['imagen'])) {
+            // Si tiene imagen asignada en BBDD, la usamos directamente (asumimos que existe)
+            $ruta_imagen = $s['imagen'];
+        } else {
+            // Fallback: Lógica antigua (por nombre) o default
+            $nombre_simple = strtolower(str_replace(' ', '', $s['sala_nombre']));
+            $ruta_posible = "img/" . $nombre_simple . ".png";
+            
+            if (file_exists(__DIR__ . '/../' . $ruta_posible)) {
+                $ruta_imagen = $ruta_posible;
+            } else {
+                $ruta_imagen = "img/fondo_panel_principal.png"; // Default general
+            }
+        }
 
-        // Guardamos todo en el array, ¡INCLUYENDO LA IMAGEN!
+        // Guardamos todo en el array
         $ocupacion_salas[] = [
             'id' => $s['id_sala'],
             'sala' => $s['sala_nombre'],
-            'imagen' => $ruta_imagen, // <--- ESTO ES LO QUE TE FALTABA
+            'imagen' => $ruta_imagen, 
             'ocupacion_pct' => $ocupacion_pct,
             'mesas_ocupadas' => $s['mesas_ocupadas'],
             'total_mesas' => $s['total_mesas']

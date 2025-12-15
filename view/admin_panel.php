@@ -184,10 +184,10 @@ $role_names = [
                             <td>
                                 <button class="btn-icon-wrapper edit-user-btn" 
                                         data-id="<?php echo $user['id']; ?>"
-                                        data-user="<?php echo htmlspecialchars($user['username']); ?>"
-                                        data-nombre="<?php echo htmlspecialchars($user['nombre']); ?>"
-                                        data-apellido="<?php echo htmlspecialchars($user['apellido']); ?>"
-                                        data-email="<?php echo htmlspecialchars($user['email']); ?>"
+                                        data-user="<?php echo htmlspecialchars($user['username'] ?? ''); ?>"
+                                        data-nombre="<?php echo htmlspecialchars($user['nombre'] ?? ''); ?>"
+                                        data-apellido="<?php echo htmlspecialchars($user['apellido'] ?? ''); ?>"
+                                        data-email="<?php echo htmlspecialchars($user['email'] ?? ''); ?>"
                                         data-rol="<?php echo $user['rol']; ?>"
                                         title="Editar Usuario">
                                     <i class="fa-solid fa-pen-to-square"></i>
@@ -261,7 +261,8 @@ $role_names = [
                             <td>
                                 <button class="btn-icon-wrapper edit-sala-btn" 
                                         data-id="<?php echo $sala['id']; ?>"
-                                        data-nombre="<?php echo htmlspecialchars($sala['nombre']); ?>"
+                                        data-nombre="<?php echo htmlspecialchars($sala['nombre'] ?? ''); ?>"
+                                        data-imagen="<?php echo htmlspecialchars($sala['imagen'] ?? ''); ?>"
                                         title="Editar Sala">
                                     <i class="fa-solid fa-pen-to-square"></i>
                                 </button>
@@ -337,13 +338,19 @@ $role_names = [
         <div class="modal-content glass-card">
             <span class="close-btn" onclick="closeModal('modalSala')">&times;</span>
             <h2>Editar Sala</h2>
-            <form action="../proc/admin_actions_proc.php" method="POST">
+            <form action="../proc/admin_actions_proc.php" method="POST" enctype="multipart/form-data">
                 <input type="hidden" name="action" value="edit_sala">
                 <input type="hidden" name="id" id="edit_sala_id">
                 
                 <div class="form-group">
                     <label>Nombre de la Sala</label>
                     <input type="text" name="nombre" id="edit_sala_nombre" class="futuristic-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Imagen de Fondo</label>
+                    <input type="file" name="imagen_file" id="edit_sala_file" class="futuristic-input" accept="image/*">
+                    <small style="color:#666;">Actual: <span id="current_sala_imagen_text" style="font-style:italic;"></span></small>
                 </div>
                 
                 <button type="submit" class="btn-submit">Guardar Cambios</button>
@@ -356,12 +363,17 @@ $role_names = [
         <div class="modal-content glass-card">
             <span class="close-btn" onclick="closeModal('modalAddSala')">&times;</span>
             <h2>Añadir Nueva Sala</h2>
-            <form action="../proc/admin_actions_proc.php" method="POST">
+            <form action="../proc/admin_actions_proc.php" method="POST" enctype="multipart/form-data">
                 <input type="hidden" name="action" value="create_sala">
                 
                 <div class="form-group">
                     <label>Nombre de la Sala</label>
                     <input type="text" name="nombre" class="futuristic-input" placeholder="Ej: Terraza Exterior" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Imagen de Fondo</label>
+                    <input type="file" name="imagen_file" class="futuristic-input" accept="image/*" required>
                 </div>
                 
                 <button type="submit" class="btn-submit">Crear Sala</button>
@@ -395,6 +407,11 @@ $role_names = [
             btn.addEventListener('click', () => {
                 document.getElementById('edit_sala_id').value = btn.dataset.id;
                 document.getElementById('edit_sala_nombre').value = btn.dataset.nombre;
+                
+                // Show current image name
+                const currentImg = btn.dataset.imagen || "Sin imagen";
+                document.getElementById('current_sala_imagen_text').innerText = currentImg;
+                
                 modalSala.style.display = 'flex';
             });
         });
