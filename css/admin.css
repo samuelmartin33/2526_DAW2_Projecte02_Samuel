@@ -1,0 +1,297 @@
+/* Copying styles from historico.css and adapting for admin panel */
+
+/* Import font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+    --rojo-gms: #c94736;
+    --rojo-hover: #b33e2f;
+    --gris-fondo: #f9f9f9;
+    --gris-claro: #ececec;
+    --gris-texto: #555;
+    --sombra: 0 4px 20px rgba(0, 0, 0, 0.1);
+    --radio: 12px;
+    --primary-gradient: linear-gradient(135deg, #c94736 0%, #b33e2f 100%);
+    --success-gradient: linear-gradient(135deg, #28a745 0%, #218838 100%);
+    --danger-gradient: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+    --info-gradient: linear-gradient(135deg, #0dcaf0 0%, #0a9cb5 100%);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    background-color: #f4f7f9;
+    background-image: url('../img/fondo_panel_principal.png');
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center 50%;
+    color: #333;
+    min-height: 100vh;
+}
+
+.main-content {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Glass Card Style matching historico */
+.glass-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(5px);
+    border-radius: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.section-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Tables matching historico.css structure/feel */
+.table-wrapper {
+    overflow-x: auto;
+    border: 1px solid #eee;
+    border-radius: 8px;
+}
+
+.futuristic-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.futuristic-table th,
+.futuristic-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.futuristic-table th {
+    background-color: #f8f9fa;
+    color: #495057;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+}
+
+.futuristic-table tbody tr:hover {
+    background-color: #f7f7f7;
+}
+
+.inactive-row {
+    background-color: rgba(0, 0, 0, 0.05) !important;
+    opacity: 0.7;
+}
+
+/* Badges */
+.badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.badge-rol-1 {
+    background: rgba(255, 193, 7, 0.2);
+    color: #d39e00;
+    border: 1px solid #ffc107;
+}
+
+/* Camarero */
+.badge-rol-5 {
+    background: rgba(156, 39, 176, 0.2);
+    color: #9c27b0;
+    border: 1px solid #9c27b0;
+}
+
+/* Jefe */
+.badge-rol-4 {
+    background: rgba(76, 175, 80, 0.2);
+    color: #2e7d32;
+    border: 1px solid #4caf50;
+}
+
+/* Mantenimiento */
+
+/* Buttons */
+.btn-icon-wrapper {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--rojo-gms);
+    font-size: 1.1rem;
+    transition: 0.2s;
+}
+
+.btn-icon-wrapper:hover {
+    color: var(--rojo-hover);
+    transform: scale(1.1);
+}
+
+/* Modals */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Semi-transparent black */
+    backdrop-filter: blur(5px);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: #fff;
+    border: none;
+    border-radius: 15px;
+    /* Same radius as glass card */
+    padding: 30px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    position: relative;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.close-btn {
+    position: absolute;
+    right: 20px;
+    top: 15px;
+    font-size: 1.5rem;
+    color: #aaa;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.close-btn:hover {
+    color: #333;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #555;
+    font-weight: 500;
+}
+
+.form-control,
+.futuristic-input,
+.input-disabled {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: #333;
+    outline: none;
+    transition: 0.3s;
+}
+
+.input-disabled {
+    background-color: #f9f9f9;
+    color: #777;
+    cursor: not-allowed;
+}
+
+.form-control:focus,
+.futuristic-input:focus {
+    border-color: var(--rojo-gms);
+    box-shadow: 0 0 0 3px rgba(201, 71, 54, 0.1);
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 12px;
+    background: var(--primary-gradient);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(201, 71, 54, 0.3);
+}
+
+/* Metric Cards reuse */
+.metric-card {
+    background: var(--primary-gradient);
+    color: white;
+    border-radius: 20px;
+    padding: 1.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+    transition: all 0.3s ease;
+    box-shadow: var(--sombra);
+}
+
+.metric-card:hover {
+    transform: translateY(-5px);
+}
+
+.metric-card.info {
+    background: var(--info-gradient);
+}
+
+.metric-number {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+.metric-label {
+    font-size: 1rem;
+    opacity: 0.9;
+    margin-top: 5px;
+}
+
+.metric-icon {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 2rem;
+    opacity: 0.2;
+}
