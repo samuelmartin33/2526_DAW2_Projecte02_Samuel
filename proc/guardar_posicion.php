@@ -11,22 +11,24 @@ if (!isset($_SESSION['loginok']) || $_SESSION['loginok'] !== true) {
 }
 
 // 3. Proceso de guardado
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['posiciones'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_sala'])) {
     $id_sala = $_POST['id_sala'];
-    $posiciones = $_POST['posiciones']; // Array que viene del formulario
 
     try {
         $conn->beginTransaction();
 
-        $stmt = $conn->prepare("UPDATE mesas SET pos_x = :x, pos_y = :y, sillas = :sillas WHERE id = :id");
+        // ACTUALIZAR MESAS EXISTENTES (si las hay)
+        if (isset($_POST['posiciones']) && is_array($_POST['posiciones'])) {
+            $stmt = $conn->prepare("UPDATE mesas SET pos_x = :x, pos_y = :y, sillas = :sillas WHERE id = :id");
 
-        foreach ($posiciones as $id_mesa => $coord) {
-            $stmt->execute([
-                ':x' => $coord['x'],
-                ':y' => $coord['y'],
-                ':sillas' => $coord['sillas'] ?? 4, // Valor por defecto si falla algo
-                ':id' => $id_mesa
-            ]);
+            foreach ($_POST['posiciones'] as $id_mesa => $coord) {
+                 $stmt->execute([
+                    ':x' => $coord['x'],
+                    ':y' => $coord['y'],
+                    ':sillas' => $coord['sillas'] ?? 4,
+                    ':id' => $id_mesa
+                ]);
+            }
         }
 
         // GUARDAR NUEVAS MESAS
@@ -55,7 +57,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['posiciones'])) {
     }
 } else {
     // Si intentan entrar directo sin enviar datos, volver al index
-    header("Location: ../view/index.php");
+    header("Location: ../index.php"); // Updated path to index.php (it is in root usually, but check location)
+    // view/index.php doesn't exist? Original file had ../view/index.php but index.php is at root usually c:\wamp64\www\DAW2\2526_DAW2_Projecte02_Samuel\index.php.
+    // proc is in proc/. ../index.php is correct.
     exit();
 }
 ?>

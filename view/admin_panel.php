@@ -60,6 +60,14 @@ $role_names = [
     4 => 'Mantenimiento',
     5 => 'Jefe de Sala'
 ];
+
+// --- INDEPENDENT STATS COUNTS ---
+// Fetch actual totals for Cards (ignoring filters)
+$stmt_count_users = $conn->query("SELECT COUNT(*) FROM users WHERE rol IN (1, 4, 5) AND fecha_baja IS NULL"); // Counting only ACTIVE staff? User label says "Empleados Activos"
+$total_staff_active = $stmt_count_users->fetchColumn();
+
+$stmt_count_salas = $conn->query("SELECT COUNT(*) FROM salas");
+$total_salas_count = $stmt_count_salas->fetchColumn();
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -86,14 +94,14 @@ $role_names = [
              <div class="col-md-6">
                 <div class="metric-card info">
                     <i class="fas fa-users metric-icon"></i>
-                    <h2 class="metric-number"><?php echo count($staff_users); ?></h2>
+                    <h2 class="metric-number"><?php echo $total_staff_active; ?></h2>
                     <p class="metric-label">Empleados Activos</p>
                 </div>
             </div>
             <div class="col-md-6">
                  <div class="metric-card">
                     <i class="fas fa-door-open metric-icon"></i>
-                    <h2 class="metric-number"><?php echo count($salas); ?></h2>
+                    <h2 class="metric-number"><?php echo $total_salas_count; ?></h2>
                     <p class="metric-label">Salas Registradas</p>
                 </div>
             </div>

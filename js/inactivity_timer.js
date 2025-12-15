@@ -60,7 +60,7 @@
     function resetTimer() {
         clearTimeout(inactivityTimer);
         // Oculta cualquier alerta que pudiera estar abierta
-        Swal.close();
+        // Swal.close();  <-- ESTA LÍNEA ES LA CULPABLE. ELIMINADA/COMENTADA.
 
         addActivityListeners();
 

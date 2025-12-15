@@ -262,6 +262,7 @@ $clientes = $stmt_clientes->fetchAll(PDO::FETCH_ASSOC);
                             <label for="num-comensales" class="form-label">Número de comensales:</label>
                             <input type="number" class="form-control text-center fs-4" id="num-comensales" name="num_comensales" min="1" required>
                             <input type="hidden" id="max-sillas" value="">
+                            <div class="error" style="display:none; color:red; margin-top:10px;"></div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -366,7 +367,7 @@ $clientes = $stmt_clientes->fetchAll(PDO::FETCH_ASSOC);
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../js/validar_asignacion.js"></script>
-    <script src="../js/alert_asignar.js"></script>
+    <!-- <script src="../js/alert_asignar.js"></script> Eliminado para unificar lógica -->
     <script>
         let editando = false;
         let elementoArrastrado = null;
