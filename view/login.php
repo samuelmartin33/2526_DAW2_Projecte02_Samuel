@@ -153,6 +153,6 @@ try {
             }
         });
     </script>
-    <script src="../../JS/validar_login.js"></script>
+    <script src="../js/validar_login.js"></script>
     </body>
 </html>

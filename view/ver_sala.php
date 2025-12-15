@@ -23,6 +23,10 @@ $mesas = $stmt_mesas->fetchAll(PDO::FETCH_ASSOC);
 
 // 3. Obtener lista de salas para el menú lateral
 $salas_nav = $conn->query("SELECT id, nombre FROM salas")->fetchAll(PDO::FETCH_ASSOC);
+
+// 4. Obtener lista de clientes para reserva
+$stmt_clientes = $conn->query("SELECT id, nombre, apellido, username FROM users WHERE rol = 3 ORDER BY nombre");
+$clientes = $stmt_clientes->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -245,19 +249,20 @@ $salas_nav = $conn->query("SELECT id, nombre FROM salas")->fetchAll(PDO::FETCH_A
                     <h5 class="modal-title" id="modalAsignarTitulo">Asignar Mesa</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="../proc/ocupar_mesa.php" method="POST">
+                <form action="../proc/ocupar_mesa.php" method="POST" id="asignar-mesa-form">
                     <div class="modal-body">
                         <input type="hidden" name="id_mesa" id="asignar_id_mesa">
                         <input type="hidden" name="id_sala" value="<?= $id_sala_actual ?>">
                         
                         <div class="mb-3">
-                            <label for="num_comensales" class="form-label">Número de comensales:</label>
-                            <input type="number" class="form-control text-center fs-4" id="num_comensales" name="num_comensales" min="1" required>
+                            <label for="num-comensales" class="form-label">Número de comensales:</label>
+                            <input type="number" class="form-control text-center fs-4" id="num-comensales" name="num_comensales" min="1" required>
+                            <input type="hidden" id="max-sillas" value="">
                         </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn btn-primary">Confirmar Asignación</button>
+                        <button type="submit" class="btn btn-primary" id="btn-asignar">Confirmar Asignación</button>
                     </div>
                 </form>
             </div>
@@ -289,7 +294,75 @@ $salas_nav = $conn->query("SELECT id, nombre FROM salas")->fetchAll(PDO::FETCH_A
         </div>
     </div>
 
+    <!-- MODAL RESERVAR MESA -->
+    <div class="modal fade" id="modalReservar" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title" id="modalReservarTitulo"><i class="fa-solid fa-calendar-plus"></i> Reservar Mesa</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="../proc/reservar_mesa.php" method="POST">
+                    <div class="modal-body">
+                        <input type="hidden" name="id_mesa" id="reservar_id_mesa">
+                        <input type="hidden" name="id_sala" value="<?= $id_sala_actual ?>">
+                        
+                        <div class="mb-3">
+                            <label for="reserva_cliente" class="form-label">Cliente:</label>
+                            <select class="form-select" name="id_cliente" id="reserva_cliente" required>
+                                <option value="" disabled selected>Seleccione Cliente</option>
+                                <?php foreach ($clientes as $c): ?>
+                                    <option value="<?= $c['id'] ?>"><?= htmlspecialchars($c['nombre'] . ' ' . $c['apellido']) ?> (<?= htmlspecialchars($c['username']) ?>)</option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                <label for="fecha_inicio" class="form-label">Inicio:</label>
+                                <input type="datetime-local" class="form-control" name="fecha_inicio" id="fecha_inicio" required>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <label for="fecha_fin" class="form-label">Fin:</label>
+                                <input type="datetime-local" class="form-control" name="fecha_fin" id="fecha_fin" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="reserva_comensales" class="form-label">Número de comensales:</label>
+                            <input type="number" class="form-control text-center fs-4" id="reserva_comensales" name="num_comensales" min="1" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-warning">Confirmar Reserva</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- MODAL OPCIONES (OCUPAR/RESERVAR) -->
+     <div class="modal fade" id="modalOpciones" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Acciones</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body d-grid gap-2">
+                    <button type="button" class="btn btn-primary btn-lg" onclick="abrirModalAsignar()">
+                        <i class="fa-solid fa-utensils"></i> Ocupar Ahora
+                    </button>
+                    <!-- Botón Reservar eliminado por solicitud del usuario (solo desde Reservas) -->
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/validar_asignacion.js"></script>
+    <script src="../js/alert_asignar.js"></script>
     <script>
         let editando = false;
         let elementoArrastrado = null;
@@ -410,22 +483,28 @@ $salas_nav = $conn->query("SELECT id, nombre FROM salas")->fetchAll(PDO::FETCH_A
 
         const modalAsignar = new bootstrap.Modal(document.getElementById('modalAsignar'));
         const modalLiberar = new bootstrap.Modal(document.getElementById('modalLiberar'));
+        const modalReservar = new bootstrap.Modal(document.getElementById('modalReservar'));
+        const modalOpciones = new bootstrap.Modal(document.getElementById('modalOpciones'));
+
+        let selectedMesaId = null;
+        let selectedMesaCapacidad = 0;
+        let selectedMesaNombre = '';
 
         function clickMesa(idMesa, estado, capacidad, nombreMesa) {
             if (editando) return; // Si estamos editando, NO navegamos
 
-            // Estado 1: Libre -> Abrir Modal Asignar
+            selectedMesaId = idMesa;
+            selectedMesaCapacidad = capacidad;
+            selectedMesaNombre = nombreMesa;
+
+            // Estado 1: Libre -> Abrir Modal Opciones (Ocupar o Reservar)
             if (estado == 1) {
-                document.getElementById('asignar_id_mesa').value = idMesa;
-                
-                const inputComensales = document.getElementById('num_comensales');
-                inputComensales.max = capacidad;
-                inputComensales.value = ''; // Reset
-                
-                document.getElementById('modalAsignarTitulo').innerText = 'Asignar ' + nombreMesa + ' (Máx: ' + capacidad + ')';
-                
-                modalAsignar.show();
+                modalOpciones.show();
             } 
+            // Estado 3: Reservada -> Permitir Ocupar directamente (confirmar llegada)
+            else if (estado == 3) {
+                abrirModalAsignar();
+            }
             // Estado 2: Ocupada -> Abrir Modal Liberar
             else if (estado == 2) {
                 document.getElementById('liberar_id_mesa').value = idMesa;
@@ -433,6 +512,54 @@ $salas_nav = $conn->query("SELECT id, nombre FROM salas")->fetchAll(PDO::FETCH_A
                 
                 modalLiberar.show();
             }
+             // Estado 3: Reservada -> Podríamos añadir lógica para ocupar una reservada. Por ahora lo tratamos como Ocupada o Libre? 
+             // Si estado es 3, el usuario debería poder ocuparla (llegaron los clientes) o cancelar.
+             // Vamos a asumir que por ahora solo tratamos 1 y 2.
+        }
+
+        function abrirModalAsignar() {
+            modalOpciones.hide();
+            document.getElementById('asignar_id_mesa').value = selectedMesaId;
+                
+            const inputComensales = document.getElementById('num-comensales');
+            inputComensales.max = selectedMesaCapacidad;
+            document.getElementById('max-sillas').value = selectedMesaCapacidad;
+            inputComensales.value = ''; // Reset
+            
+            document.getElementById('modalAsignarTitulo').innerText = 'Asignar ' + selectedMesaNombre + ' (Máx: ' + selectedMesaCapacidad + ')';
+            
+            modalAsignar.show();
+        }
+
+        function abrirModalReservar() {
+            modalOpciones.hide();
+            document.getElementById('reservar_id_mesa').value = selectedMesaId;
+            document.getElementById('reserva_comensales').max = selectedMesaCapacidad;
+            document.getElementById('modalReservarTitulo').innerHTML = '<i class="fa-solid fa-calendar-plus"></i> Reservar ' + selectedMesaNombre;
+            
+            // Set default dates (now and +1 hour)
+            const now = new Date();
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            document.getElementById('fecha_inicio').value = now.toISOString().slice(0, 16);
+            
+            const later = new Date(now.getTime() + 60*60*1000); // +1 hour
+            // no need to adujst timezone again if we use getTime from the adjusted 'now' object? No wait.
+            // setMinutes modifies inplace. 
+            // Let's just do it cleanly.
+            
+            // Re-calc for clean value
+            const d1 = new Date();
+            const d2 = new Date(d1.getTime() + 60*60*1000);
+            
+            const toLocalISO = (d) => {
+                const off = d.getTimezoneOffset() * 60000;
+                return new Date(d.getTime() - off).toISOString().slice(0, 16);
+            };
+
+            document.getElementById('fecha_inicio').value = toLocalISO(d1);
+            document.getElementById('fecha_fin').value = toLocalISO(d2);
+
+            modalReservar.show();
         }
 
 

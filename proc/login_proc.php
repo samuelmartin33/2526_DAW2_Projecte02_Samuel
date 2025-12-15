@@ -72,8 +72,15 @@ try {
     // Establece la "bandera" para mostrar el mensaje de bienvenida (SweetAlert)
     $_SESSION['show_welcome_message'] = true; 
 
-    // Redirige al panel principal (index.php)
-    header('Location: ../index.php');
+    // REDIRECCIÓN SEGÚN ROL
+    if ($user['rol'] == 2) {
+        // Si es ADMIN, redirige al Panel de Admin
+        header('Location: ../view/admin_panel.php');
+    } else {
+        // Si es RESTO DE STAFF, redirige al Panel Principal (Salas)
+        header('Location: ../index.php');
+    }
+    
     exit;
 
 } catch (PDOException $e) {

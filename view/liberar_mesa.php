@@ -100,12 +100,15 @@ $sala = $stmt_sala->fetch(PDO::FETCH_ASSOC);
                 <i class="fa-solid fa-triangle-exclamation"></i> ¿Estás seguro de que quieres finalizar esta ocupación?
             </div>
 
-            <form action="../proc/liberar_mesa.php" method="POST">
+            <form action="../proc/liberar_mesa.php" method="POST" id="liberar-mesa-form">
                 <input type="hidden" name="id_mesa" value="<?= $id_mesa ?>">
                 <input type="hidden" name="id_sala" value="<?= $id_sala ?>">
+                <!-- Hidden inputs for JS validation -->
+                <input type="hidden" id="camarero" value="<?= $mesa['camarero_nombre'] ?>">
+                <input type="hidden" id="camarero_sesion" value="<?= $_SESSION['username'] ?>">
 
                 <div class="d-grid gap-2">
-                    <button type="submit" class="btn btn-danger btn-lg">
+                    <button type="submit" class="btn btn-danger btn-lg" id="btn-liberar">
                         <i class="fa-solid fa-check"></i> Sí, Liberar Mesa
                     </button>
                     <a href="ver_sala.php?id_sala=<?= $id_sala ?>" class="btn btn-outline-secondary">
@@ -116,5 +119,6 @@ $sala = $stmt_sala->fetch(PDO::FETCH_ASSOC);
         </div>
     </div>
 
+    <script src="../js/liberar_mesa.js"></script>
 </body>
 </html>

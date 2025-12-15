@@ -35,6 +35,9 @@ if ($hora >= 6 && $hora < 12) {
         <a href="../view/historico.php" class="nav-link">
             <i class="fa-solid fa-chart-bar"></i> Histórico
         </a>
+        <a href="../view/reservas.php" class="nav-link">
+            <i class="fa-solid fa-calendar-days"></i> Reservas
+        </a>
         <?php if (isset($_SESSION['rol']) && $_SESSION['rol'] == 2): ?>
             <a href="../view/admin_panel.php" class="nav-link">
                 <i class="fa-solid fa-gear"></i> Admin
@@ -48,3 +51,7 @@ if ($hora >= 6 && $hora < 12) {
         </button>
     </form>
 </nav>
+
+<!-- Scripts Globales (SweetAlert + Inactividad) -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="../js/inactivity_timer.js"></script>

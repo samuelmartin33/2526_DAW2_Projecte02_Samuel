@@ -8,7 +8,8 @@
     box-sizing: border-box;
 }
 
-html, body {
+html,
+body {
     height: 100%;
     font-family: 'Poppins', sans-serif;
     color: #333;
@@ -39,13 +40,17 @@ html, body {
     align-items: center;
     gap: 10px;
 }
-.header-logo img { height: 70px; }
+
+.header-logo img {
+    height: 70px;
+}
 
 .logo-text {
     display: flex;
     flex-direction: column;
     line-height: 1.1;
 }
+
 .gms-title {
     font-size: 2.0rem;
     font-weight: 800;
@@ -58,6 +63,7 @@ html, body {
     flex-grow: 1;
     text-align: center;
 }
+
 .username-tag {
     font-weight: 700;
     background-color: rgba(255, 255, 255, 0.2);
@@ -71,6 +77,7 @@ html, body {
     gap: 25px;
     margin-right: 30px;
 }
+
 .nav-link {
     color: white;
     text-decoration: none;
@@ -79,8 +86,14 @@ html, body {
     transition: opacity 0.2s;
     font-size: 1.05rem;
 }
-.nav-link:hover { opacity: 0.8; }
-.nav-link i { margin-right: 8px; }
+
+.nav-link:hover {
+    opacity: 0.8;
+}
+
+.nav-link i {
+    margin-right: 8px;
+}
 
 .logout-btn {
     background-color: white;
@@ -94,8 +107,15 @@ html, body {
     transition: transform 0.2s ease;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
-.logout-btn:hover { background-color: #f0f0f0; transform: translateY(-1px); }
-.logout-btn i { margin-right: 8px; }
+
+.logout-btn:hover {
+    background-color: #f0f0f0;
+    transform: translateY(-1px);
+}
+
+.logout-btn i {
+    margin-right: 8px;
+}
 
 /* ==========================
    DASHBOARD / GRID
@@ -107,7 +127,8 @@ html, body {
     background-color: rgba(255, 255, 255, 0.95);
     border-radius: 15px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-    margin-top: 100px; /* Ajustado */
+    margin-top: 100px;
+    /* Ajustado */
     margin-bottom: 30px;
 }
 
@@ -136,18 +157,24 @@ html, body {
     overflow: hidden;
     transition: transform 0.3s ease;
 }
-.stat-card:hover { transform: translateY(-5px); }
+
+.stat-card:hover {
+    transform: translateY(-5px);
+}
+
 .stat-value {
     font-size: 2.5rem;
     font-weight: 800;
     margin-bottom: 5px;
     line-height: 1;
 }
+
 .stat-label {
     font-size: 1rem;
     font-weight: 500;
     color: #777;
 }
+
 .stat-icon {
     position: absolute;
     top: 50%;
@@ -156,9 +183,18 @@ html, body {
     font-size: 4rem;
     opacity: 0.1;
 }
-.stat-card.primary { color: #2980b9; }
-.stat-card.warning { color: #f39c12; }
-.stat-card.success { color: #27ae60; }
+
+.stat-card.primary {
+    color: #2980b9;
+}
+
+.stat-card.warning {
+    color: #f39c12;
+}
+
+.stat-card.success {
+    color: #27ae60;
+}
 
 .section-title {
     font-size: 1.8rem;
@@ -185,36 +221,41 @@ html, body {
 .sala-card-link {
     text-decoration: none;
     color: inherit;
-    display: block;  /* Para que ocupe espacio */
-    height: 100%;    /* Para que llene la celda del grid */
+    display: block;
+    /* Para que ocupe espacio */
+    height: 100%;
+    /* Para que llene la celda del grid */
 }
 
 /* Tarjeta individual */
 .sala-card {
     /* Altura fija o mínima para uniformidad */
-    height: 100%;       /* Llena el enlace padre */
-    min-height: 220px;  /* Altura mínima garantizada */
-    
+    height: 100%;
+    /* Llena el enlace padre */
+    min-height: 220px;
+    /* Altura mínima garantizada */
+
     padding: 25px;
     border-radius: 15px;
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     border: 1px solid rgba(0, 0, 0, 0.05);
     cursor: pointer;
-    
+
     /* Configuración de Flexbox para distribuir contenido */
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* Título arriba, % abajo */
+    justify-content: space-between;
+    /* Título arriba, % abajo */
 
     /* Imagen de fondo */
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    
+
     /* Texto blanco con sombra */
     color: white;
-    text-shadow: 0 2px 5px rgba(0,0,0,0.9);
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.9);
 }
 
 .sala-card:hover {
@@ -232,19 +273,21 @@ html, body {
 
 .sala-occupancy {
     font-size: 1.1rem;
-    margin-bottom: auto; /* Empuja el resto hacia abajo */
+    margin-bottom: auto;
+    /* Empuja el resto hacia abajo */
     font-weight: 500;
     color: #f1f1f1;
 }
 
 .progress-bar-container {
-    background-color: rgba(255, 255, 255, 0.25); /* Barra de fondo semitransparente */
+    background-color: rgba(255, 255, 255, 0.25);
+    /* Barra de fondo semitransparente */
     border-radius: 10px;
     height: 12px;
     overflow: hidden;
     margin-top: 15px;
     margin-bottom: 8px;
-    border: 1px solid rgba(255,255,255,0.3);
+    border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .progress-bar {
@@ -266,16 +309,26 @@ html, body {
         padding: 20px;
         gap: 15px;
     }
+
     .header-menu {
         margin-right: 0;
         flex-wrap: wrap;
         justify-content: center;
     }
+
     .container {
         margin-top: 20px;
         width: 95%;
         padding: 20px;
     }
-    .logout-btn { font-size: 0; padding: 10px 12px; }
-    .logout-btn i { font-size: 1.2rem; margin: 0; }
+
+    .logout-btn {
+        font-size: 0;
+        padding: 10px 12px;
+    }
+
+    .logout-btn i {
+        font-size: 1.2rem;
+        margin: 0;
+    }
 }

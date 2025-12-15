@@ -97,6 +97,16 @@ $role_names = [
                     <p class="metric-label">Salas Registradas</p>
                 </div>
             </div>
+            <!-- Quick Link to Reservas -->
+            <div class="col-md-12">
+                 <a href="reservas.php" style="text-decoration:none;">
+                     <div class="metric-card info" style="border: 2px solid #5a9bd4; cursor:pointer;">
+                        <i class="fas fa-calendar-days metric-icon"></i>
+                        <h2 class="metric-number" style="font-size: 1.5rem;">GESTIONAR RESERVAS</h2>
+                        <p class="metric-label">Ir al Panel de Reservas</p>
+                    </div>
+                 </a>
+            </div>
         </div>
 
         <!-- Gestión de Personal -->
