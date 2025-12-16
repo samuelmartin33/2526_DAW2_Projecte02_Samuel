@@ -30,8 +30,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function checkCliente(input) {
         if (!input) return true;
-        if (input.value === "") {
-            mostrarErrorInput(input, "Debes seleccionar un cliente.");
+        const val = input.value.trim();
+        if (val === "") {
+            mostrarErrorInput(input, "Debes introducir el nombre del cliente.");
+            return false;
+        }
+        if (val.length < 3) {
+            mostrarErrorInput(input, "El nombre debe tener al menos 3 caracteres.");
             return false;
         }
         limpiarErrorInput(input);
@@ -80,7 +85,9 @@ document.addEventListener('DOMContentLoaded', function () {
         const form = document.getElementById(formId);
         if (!form) return;
 
-        const cliente = form.querySelector('select[name="id_cliente"]');
+        // Ahora es un input text: nombre_cliente
+        const cliente = form.querySelector('input[name="nombre_cliente"]');
+
         const fechaInicio = form.querySelector('input[name="fecha_inicio"]');
         const fechaFin = form.querySelector('input[name="fecha_fin"]');
         const comensales = form.querySelector('input[name="num_comensales"]');
@@ -88,7 +95,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Listeners
         if (cliente) {
             cliente.addEventListener('blur', () => checkCliente(cliente));
-            cliente.addEventListener('change', () => checkCliente(cliente)); // Select change also triggers
+            // cliente.addEventListener('input', () => checkCliente(cliente)); // Optional: real-time check
         }
 
         if (fechaInicio) {

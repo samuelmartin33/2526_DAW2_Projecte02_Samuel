@@ -313,13 +313,8 @@ $clientes = $stmt_clientes->fetchAll(PDO::FETCH_ASSOC);
                         <input type="hidden" name="id_sala" value="<?= $id_sala_actual ?>">
                         
                         <div class="mb-3">
-                            <label for="reserva_cliente" class="form-label">Cliente:</label>
-                            <select class="form-select" name="id_cliente" id="reserva_cliente">
-                                <option value="" disabled selected>Seleccione Cliente</option>
-                                <?php foreach ($clientes as $c): ?>
-                                    <option value="<?= $c['id'] ?>"><?= htmlspecialchars($c['nombre'] . ' ' . $c['apellido']) ?> (<?= htmlspecialchars($c['username']) ?>)</option>
-                                <?php endforeach; ?>
-                            </select>
+                            <label for="reserva_cliente" class="form-label">Nombre Cliente:</label>
+                            <input type="text" class="form-control" name="nombre_cliente" id="reserva_cliente" placeholder="Nombre completo del cliente" required>
                         </div>
                         
                         <div class="row">
@@ -541,6 +536,7 @@ $clientes = $stmt_clientes->fetchAll(PDO::FETCH_ASSOC);
             modalOpciones.hide();
             document.getElementById('reservar_id_mesa').value = selectedMesaId;
             document.getElementById('reserva_comensales').max = selectedMesaCapacidad;
+            document.getElementById('reserva_cliente').value = ''; // Clear client name
             document.getElementById('modalReservarTitulo').innerHTML = '<i class="fa-solid fa-calendar-plus"></i> Reservar ' + selectedMesaNombre;
             
             // Set default dates (now and +1 hour)

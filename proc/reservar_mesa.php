@@ -17,13 +17,15 @@ if (!in_array($rol, [1, 5])) {
 // Obtener datos del formulario
 $id_mesa = $_POST['id_mesa'] ?? null;
 $id_sala = $_POST['id_sala'] ?? null;
-$id_cliente = $_POST['id_cliente'] ?? null;
+$id_cliente = !empty($_POST['id_cliente']) ? $_POST['id_cliente'] : null;
+$nombre_cliente_reserva = $_POST['nombre_cliente'] ?? null; // Nuevo campo de texto
 $fecha_inicio = $_POST['fecha_inicio'] ?? null;
 $fecha_fin = $_POST['fecha_fin'] ?? null;
 $num_comensales = $_POST['num_comensales'] ?? null;
 
 // Validaciones básicas
-if (!$id_mesa || !$id_sala || !$id_cliente || !$fecha_inicio || !$fecha_fin || !$num_comensales) {
+// Debe haber al menos un cliente (ID o Nombre)
+if (!$id_mesa || !$id_sala || (!$id_cliente && !$nombre_cliente_reserva) || !$fecha_inicio || !$fecha_fin || !$num_comensales) {
     header("Location: ../view/ver_sala.php?id_sala=$id_sala&error=campos_vacios");
     exit();
 }
@@ -45,13 +47,14 @@ try {
     }
     
     // Insertar Reserva
-    // id_usuario_reserva es el cliente
-    $sql = "INSERT INTO reservas (id_usuario_reserva, id_mesa, fecha_inicio, fecha_fin, num_comensales, estado) 
-            VALUES (:cliente, :mesa, :inicio, :fin, :comensales, 2)"; // Estado 2 = Confirmada
+    // Ahora soportamos nombre_cliente_reserva y id_usuario_reserva puede ser NULL
+    $sql = "INSERT INTO reservas (id_usuario_reserva, nombre_cliente_reserva, id_mesa, fecha_inicio, fecha_fin, num_comensales, estado) 
+            VALUES (:cliente_id, :cliente_nombre, :mesa, :inicio, :fin, :comensales, 2)"; // Estado 2 = Confirmada
             
     $stmt = $conn->prepare($sql);
     $stmt->execute([
-        ':cliente' => $id_cliente,
+        ':cliente_id' => $id_cliente,
+        ':cliente_nombre' => $nombre_cliente_reserva,
         ':mesa' => $id_mesa,
         ':inicio' => $fecha_inicio,
         ':fin' => $fecha_fin,

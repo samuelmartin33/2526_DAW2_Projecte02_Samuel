@@ -37,9 +37,12 @@ $mesas = $stmt_mesas->fetchAll(PDO::FETCH_ASSOC);
 
 // 4. Obtener Reservas que "ocupan" las mesas en ese momento
 // Una mesa está "ocupada" si existe una reserva confirmada/pendiente que incluya el target_datetime
-$sql_ocupadas = "SELECT r.*, u.nombre as nombre_cliente, u.apellido as apellido_cliente, u.username as user_cliente
+$sql_ocupadas = "SELECT r.*, 
+                 COALESCE(u.nombre, r.nombre_cliente_reserva) as nombre_cliente, 
+                 COALESCE(u.apellido, '') as apellido_cliente, 
+                 u.username as user_cliente
                  FROM reservas r
-                 JOIN users u ON r.id_usuario_reserva = u.id
+                 LEFT JOIN users u ON r.id_usuario_reserva = u.id
                  WHERE r.id_mesa IN (SELECT id FROM mesas WHERE id_sala = ?)
                  AND r.estado IN (1, 2) -- Pendiente o Confirmada
                  AND r.fecha_inicio <= ? 
@@ -312,13 +315,9 @@ $clientes = $stmt_clientes->fetchAll(PDO::FETCH_ASSOC);
                         <p class="mb-3">Creando reserva para la mesa <strong><span id="new_mesa_nombre_display"></span></strong>.</p>
                         
                         <div class="mb-3">
-                            <label class="form-label">Cliente:</label>
-                            <select class="form-select" name="id_cliente">
-                                <option value="" disabled selected>Seleccione Cliente</option>
-                                <?php foreach ($clientes as $c): ?>
-                                    <option value="<?= $c['id'] ?>"><?= htmlspecialchars($c['nombre'] . ' ' . $c['apellido']) ?> (<?= htmlspecialchars($c['username']) ?>)</option>
-                                <?php endforeach; ?>
-                            </select>
+                            <label class="form-label">Nombre Cliente:</label>
+                            <input type="text" class="form-control" name="nombre_cliente" id="new_nombre_cliente" placeholder="Nombre del cliente" required>
+                            <!-- Eliminado Select de usuarios registrados por petición -->
                         </div>
                         
                         <div class="row">
@@ -386,6 +385,7 @@ $clientes = $stmt_clientes->fetchAll(PDO::FETCH_ASSOC);
                 document.getElementById('new_mesa_nombre_display').innerText = nombreMesa;
                 document.getElementById('new_num_comensales').max = capacidad;
                 document.getElementById('new_num_comensales').value = '';
+                document.getElementById('new_nombre_cliente').value = ''; // Clear client name
                 
                 // Pre-rellenar fechas basándonos en el filtro
                 // Construir fecha base

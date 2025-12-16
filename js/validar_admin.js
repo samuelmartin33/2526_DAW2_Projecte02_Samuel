@@ -107,12 +107,14 @@ document.addEventListener('DOMContentLoaded', function () {
     if (formEditUser) {
         const usernameInput = document.getElementById('edit_user_username');
         const nombreInput = document.getElementById('edit_user_nombre');
+        const apellidoInput = document.getElementById('edit_user_apellido'); // NEW
         const emailInput = document.getElementById('edit_user_email');
         const passwordInput = document.getElementById('edit_user_password');
 
         // On Blur
         usernameInput.addEventListener('blur', () => checkUsername(usernameInput));
         nombreInput.addEventListener('blur', () => checkRequired(nombreInput, 'nombre'));
+        apellidoInput.addEventListener('blur', () => checkRequired(apellidoInput, 'apellido')); // NEW
         emailInput.addEventListener('blur', () => checkEmail(emailInput));
         passwordInput.addEventListener('blur', () => checkPassword(passwordInput));
 
@@ -120,10 +122,11 @@ document.addEventListener('DOMContentLoaded', function () {
         formEditUser.addEventListener('submit', function (e) {
             const v1 = checkUsername(usernameInput);
             const v2 = checkRequired(nombreInput, 'nombre');
-            const v3 = checkEmail(emailInput);
-            const v4 = checkPassword(passwordInput);
+            const v3 = checkRequired(apellidoInput, 'apellido'); // NEW
+            const v4 = checkEmail(emailInput);
+            const v5 = checkPassword(passwordInput);
 
-            if (!v1 || !v2 || !v3 || !v4) {
+            if (!v1 || !v2 || !v3 || !v4 || !v5) {
                 e.preventDefault();
             }
         });
