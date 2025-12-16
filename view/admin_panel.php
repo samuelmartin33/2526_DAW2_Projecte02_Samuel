@@ -119,9 +119,15 @@ $total_salas_count = $stmt_count_salas->fetchColumn();
 
         <!-- Gestión de Personal -->
         <div class="glass-card">
-            <div class="section-title">
-                <i class="fas fa-users-gear text-primary" style="color: #c94736;"></i>
-                Gestión de Personal
+            <div class="section-title" style="justify-content: space-between;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <i class="fas fa-users-gear text-primary" style="color: #c94736;"></i>
+                    Gestión de Personal
+                </div>
+                <!-- User Add Button -->
+                <button class="btn-submit" style="width: auto; padding: 8px 20px; font-size: 0.9rem;" onclick="openAddUserModal()">
+                    <i class="fas fa-plus"></i> Añadir Personal
+                </button>
             </div>
 
             <!-- Staff Filter Form -->
@@ -229,6 +235,7 @@ $total_salas_count = $stmt_count_salas->fetchColumn();
                     <i class="fas fa-door-open text-primary" style="color: #c94736;"></i>
                     Gestión de Salas
                 </div>
+                <!-- Sala Add Button -->
                 <button class="btn-submit" style="width: auto; padding: 8px 20px; font-size: 0.9rem;" onclick="openAddSalaModal()">
                     <i class="fas fa-plus"></i> Añadir Sala
                 </button>
@@ -389,11 +396,61 @@ $total_salas_count = $stmt_count_salas->fetchColumn();
         </div>
     </div>
 
+    <!-- Modal Añadir Usuario -->
+    <div id="modalAddUser" class="modal">
+        <div class="modal-content glass-card" style="max-height:90vh; overflow-y:auto;">
+            <span class="close-btn" onclick="closeModal('modalAddUser')">&times;</span>
+            <h2>Añadir Nuevo Empleado</h2>
+            <form id="formCreateUser" action="../proc/admin_actions_proc.php" method="POST">
+                <input type="hidden" name="action" value="create_user">
+                
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        <label>Usuario</label>
+                        <input type="text" name="username" id="create_user_username" class="futuristic-input" placeholder="Nombre usuario" required>
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label>Rol</label>
+                        <select name="rol" id="create_user_rol" class="futuristic-input">
+                            <option value="1">Camarero</option>
+                            <option value="5">Jefe de Sala</option>
+                            <option value="4">Mantenimiento</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 form-group">
+                        <label>Nombre</label>
+                        <input type="text" name="nombre" id="create_user_nombre" class="futuristic-input" placeholder="Nombre real" required>
+                    </div>
+                    <div class="col-md-6 form-group">
+                        <label>Apellido</label>
+                        <input type="text" name="apellido" id="create_user_apellido" class="futuristic-input" placeholder="Primer apellido" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" id="create_user_email" class="futuristic-input" placeholder="email@ejemplo.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <input type="password" name="password" id="create_user_password" class="futuristic-input" placeholder="Contraseña de acceso" required>
+                </div>
+                
+                <button type="submit" class="btn-submit">Crear Usuario</button>
+            </form>
+        </div>
+    </div>
+
     <script>
         // Modal Logic
         const modalUser = document.getElementById('modalUser');
         const modalSala = document.getElementById('modalSala');
         const modalAddSala = document.getElementById('modalAddSala');
+        const modalAddUser = document.getElementById('modalAddUser');
 
         document.querySelectorAll('.edit-user-btn').forEach(btn => {
             btn.addEventListener('click', () => {
@@ -426,6 +483,10 @@ $total_salas_count = $stmt_count_salas->fetchColumn();
 
         function openAddSalaModal() {
             modalAddSala.style.display = 'flex';
+        }
+
+        function openAddUserModal() {
+            modalAddUser.style.display = 'flex';
         }
 
         function closeModal(modalId) {

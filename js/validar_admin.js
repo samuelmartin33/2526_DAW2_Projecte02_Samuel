@@ -166,4 +166,47 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // 4. ADD USER (NEW)
+    const formCreateUser = document.getElementById('formCreateUser');
+    if (formCreateUser) {
+        const usernameInput = document.getElementById('create_user_username');
+        const nombreInput = document.getElementById('create_user_nombre');
+        const apellidoInput = document.getElementById('create_user_apellido');
+        const emailInput = document.getElementById('create_user_email');
+        const passwordInput = document.getElementById('create_user_password');
+
+        usernameInput.addEventListener('blur', () => checkUsername(usernameInput));
+        nombreInput.addEventListener('blur', () => checkRequired(nombreInput, 'nombre'));
+        apellidoInput.addEventListener('blur', () => checkRequired(apellidoInput, 'apellido'));
+        emailInput.addEventListener('blur', () => checkEmail(emailInput));
+        // Password is REQUIRED for creation
+        passwordInput.addEventListener('blur', function () {
+            if (passwordInput.value.trim().length < 6) {
+                mostrarErrorInput(passwordInput, 'La contraseña es obligatoria y debe tener al menos 6 caracteres.');
+            } else {
+                limpiarErrorInput(passwordInput);
+            }
+        });
+
+        formCreateUser.addEventListener('submit', function (e) {
+            const v1 = checkUsername(usernameInput);
+            const v2 = checkRequired(nombreInput, 'nombre');
+            const v3 = checkRequired(apellidoInput, 'apellido');
+            const v4 = checkEmail(emailInput);
+
+            // Custom Password Check for Creation
+            let v5 = true;
+            if (passwordInput.value.trim().length < 6) {
+                mostrarErrorInput(passwordInput, 'La contraseña es obligatoria y debe tener al menos 6 caracteres.');
+                v5 = false;
+            } else {
+                limpiarErrorInput(passwordInput);
+            }
+
+            if (!v1 || !v2 || !v3 || !v4 || !v5) {
+                e.preventDefault();
+            }
+        });
+    }
+
 });

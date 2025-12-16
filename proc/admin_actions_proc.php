@@ -222,6 +222,60 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
              header("Location: ../view/admin_panel.php?error=invalid_data");
              exit;
         }
+    } elseif ($action === 'create_user') {
+        // NEW ACTION: CREATE USER
+        $username = trim($_POST['username'] ?? '');
+        $nombre = trim($_POST['nombre'] ?? '');
+        $apellido = trim($_POST['apellido'] ?? '');
+        $email = trim($_POST['email'] ?? '');
+        $rol = $_POST['rol'] ?? '';
+        $password = $_POST['password'] ?? '';
+
+        // PHP Validation
+        if (empty($username) || empty($nombre) || empty($apellido) || empty($email) || empty($password)) {
+             header("Location: ../view/admin_panel.php?error=empty_fields");
+             exit;
+        }
+
+        if (strlen($password) < 6) {
+             header("Location: ../view/admin_panel.php?error=password_short");
+             exit;
+        }
+
+        $allowed_roles = ['1', '4', '5'];
+        if (!in_array($rol, $allowed_roles)) {
+             header("Location: ../view/admin_panel.php?error=invalid_role");
+             exit;
+        }
+
+        try {
+            $password_hash = password_hash($password, PASSWORD_DEFAULT);
+
+            $sql = "INSERT INTO users (username, nombre, apellido, email, password_hash, rol) 
+                    VALUES (:username, :nombre, :apellido, :email, :pass, :rol)";
+            
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':username', $username);
+            $stmt->bindParam(':nombre', $nombre);
+            $stmt->bindParam(':apellido', $apellido);
+            $stmt->bindParam(':email', $email);
+            $stmt->bindParam(':pass', $password_hash);
+            $stmt->bindParam(':rol', $rol);
+            
+            $stmt->execute();
+
+            header("Location: ../view/admin_panel.php?status=success_create_user");
+            exit;
+
+        } catch (PDOException $e) {
+            // Check duplicate
+            if ($e->errorInfo[1] == 1062) {
+                 header("Location: ../view/admin_panel.php?error=duplicate_entry");
+            } else {
+                 header("Location: ../view/admin_panel.php?error=db_error");
+            }
+            exit;
+        }
     }
 }
 
