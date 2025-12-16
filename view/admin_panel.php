@@ -296,14 +296,14 @@ $total_salas_count = $stmt_count_salas->fetchColumn();
         <div class="modal-content glass-card" style="max-height:90vh; overflow-y:auto;">
             <span class="close-btn" onclick="closeModal('modalUser')">&times;</span>
             <h2>Editar Usuario</h2>
-            <form action="../proc/admin_actions_proc.php" method="POST">
+            <form id="formEditUser" action="../proc/admin_actions_proc.php" method="POST">
                 <input type="hidden" name="action" value="edit_user">
                 <input type="hidden" name="id" id="edit_user_id">
                 
                 <div class="row">
                     <div class="col-md-6 form-group">
                         <label>Usuario</label>
-                        <input type="text" name="username" id="edit_user_username" class="futuristic-input" required>
+                        <input type="text" name="username" id="edit_user_username" class="futuristic-input">
                     </div>
                     <div class="col-md-6 form-group">
                         <label>Rol</label>
@@ -318,7 +318,7 @@ $total_salas_count = $stmt_count_salas->fetchColumn();
                 <div class="row">
                     <div class="col-md-6 form-group">
                         <label>Nombre</label>
-                        <input type="text" name="nombre" id="edit_user_nombre" class="futuristic-input" required>
+                        <input type="text" name="nombre" id="edit_user_nombre" class="futuristic-input">
                     </div>
                     <div class="col-md-6 form-group">
                         <label>Apellido</label>
@@ -328,7 +328,7 @@ $total_salas_count = $stmt_count_salas->fetchColumn();
 
                 <div class="form-group">
                     <label>Email</label>
-                    <input type="email" name="email" id="edit_user_email" class="futuristic-input" required>
+                    <input type="email" name="email" id="edit_user_email" class="futuristic-input">
                 </div>
 
                 <div class="form-group">
@@ -346,13 +346,13 @@ $total_salas_count = $stmt_count_salas->fetchColumn();
         <div class="modal-content glass-card">
             <span class="close-btn" onclick="closeModal('modalSala')">&times;</span>
             <h2>Editar Sala</h2>
-            <form action="../proc/admin_actions_proc.php" method="POST" enctype="multipart/form-data">
+            <form id="formEditSala" action="../proc/admin_actions_proc.php" method="POST" enctype="multipart/form-data">
                 <input type="hidden" name="action" value="edit_sala">
                 <input type="hidden" name="id" id="edit_sala_id">
                 
                 <div class="form-group">
                     <label>Nombre de la Sala</label>
-                    <input type="text" name="nombre" id="edit_sala_nombre" class="futuristic-input" required>
+                    <input type="text" name="nombre" id="edit_sala_nombre" class="futuristic-input">
                 </div>
                 
                 <div class="form-group">
@@ -371,17 +371,17 @@ $total_salas_count = $stmt_count_salas->fetchColumn();
         <div class="modal-content glass-card">
             <span class="close-btn" onclick="closeModal('modalAddSala')">&times;</span>
             <h2>Añadir Nueva Sala</h2>
-            <form action="../proc/admin_actions_proc.php" method="POST" enctype="multipart/form-data">
+            <form id="formAddSala" action="../proc/admin_actions_proc.php" method="POST" enctype="multipart/form-data">
                 <input type="hidden" name="action" value="create_sala">
                 
                 <div class="form-group">
                     <label>Nombre de la Sala</label>
-                    <input type="text" name="nombre" class="futuristic-input" placeholder="Ej: Terraza Exterior" required>
+                    <input type="text" name="nombre" class="futuristic-input" placeholder="Ej: Terraza Exterior">
                 </div>
                 
                 <div class="form-group">
                     <label>Imagen de Fondo</label>
-                    <input type="file" name="imagen_file" class="futuristic-input" accept="image/*" required>
+                    <input type="file" name="imagen_file" class="futuristic-input" accept="image/*">
                 </div>
                 
                 <button type="submit" class="btn-submit">Crear Sala</button>
@@ -432,11 +432,12 @@ $total_salas_count = $stmt_count_salas->fetchColumn();
             document.getElementById(modalId).style.display = 'none';
         }
 
-        window.onclick = function(event) {
-            if (event.target == modalUser) modalUser.style.display = 'none';
-            if (event.target == modalSala) modalSala.style.display = 'none';
-            if (event.target == modalAddSala) modalAddSala.style.display = 'none';
-        }
+        // window.onclick = function(event) {
+        //     if (event.target == modalUser) modalUser.style.display = 'none';
+        //     if (event.target == modalSala) modalSala.style.display = 'none';
+        //     if (event.target == modalAddSala) modalAddSala.style.display = 'none';
+        // }
     </script>
+    <script src="../js/validar_admin.js"></script>
 </body>
 </html>

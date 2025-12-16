@@ -301,7 +301,7 @@ $clientes = $stmt_clientes->fetchAll(PDO::FETCH_ASSOC);
                     <h5 class="modal-title"><i class="fa-solid fa-plus-circle"></i> Nueva Reserva</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="../proc/reservar_mesa.php" method="POST">
+                <form id="formNuevaReserva" action="../proc/reservar_mesa.php" method="POST">
                     <div class="modal-body">
                         <!-- Redirect Back -->
                         <input type="hidden" name="redirect_url" value="reservas.php?id_sala=<?= $id_sala_actual ?>&fecha=<?= $fecha_filtro ?>&hora=<?= $hora_filtro ?>">
@@ -313,7 +313,7 @@ $clientes = $stmt_clientes->fetchAll(PDO::FETCH_ASSOC);
                         
                         <div class="mb-3">
                             <label class="form-label">Cliente:</label>
-                            <select class="form-select" name="id_cliente" required>
+                            <select class="form-select" name="id_cliente">
                                 <option value="" disabled selected>Seleccione Cliente</option>
                                 <?php foreach ($clientes as $c): ?>
                                     <option value="<?= $c['id'] ?>"><?= htmlspecialchars($c['nombre'] . ' ' . $c['apellido']) ?> (<?= htmlspecialchars($c['username']) ?>)</option>
@@ -325,7 +325,7 @@ $clientes = $stmt_clientes->fetchAll(PDO::FETCH_ASSOC);
                             <div class="col-6 mb-3">
                                 <label class="form-label">Desde:</label>
                                 <!-- Pre-fill with current filter time -->
-                                <input type="datetime-local" class="form-control" name="fecha_inicio" id="new_fecha_inicio" required onchange="updateFechaFin()">
+                                <input type="datetime-local" class="form-control" name="fecha_inicio" id="new_fecha_inicio" onchange="updateFechaFin()">
                             </div>
                             <div class="col-6 mb-3">
                                 <label class="form-label">Duración:</label>
@@ -341,7 +341,7 @@ $clientes = $stmt_clientes->fetchAll(PDO::FETCH_ASSOC);
 
                         <div class="mb-3">
                             <label class="form-label">Comensales:</label>
-                            <input type="number" class="form-control" name="num_comensales" id="new_num_comensales" min="1" required>
+                            <input type="number" class="form-control" name="num_comensales" id="new_num_comensales" min="1">
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -354,9 +354,10 @@ $clientes = $stmt_clientes->fetchAll(PDO::FETCH_ASSOC);
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/validar_reservas_forms.js"></script>
     <script>
-        const modalDetalle = new bootstrap.Modal(document.getElementById('modalDetalleReserva'));
-        const modalNueva = new bootstrap.Modal(document.getElementById('modalNuevaReserva'));
+        const modalDetalle = new bootstrap.Modal(document.getElementById('modalDetalleReserva'), { backdrop: 'static', keyboard: false });
+        const modalNueva = new bootstrap.Modal(document.getElementById('modalNuevaReserva'), { backdrop: 'static', keyboard: false });
         
         // Variables PHP pasadas a JS para usar en los defaults
         const fechaFiltro = "<?= $fecha_filtro ?>";

@@ -260,7 +260,7 @@ $clientes = $stmt_clientes->fetchAll(PDO::FETCH_ASSOC);
                         
                         <div class="mb-3">
                             <label for="num-comensales" class="form-label">Número de comensales:</label>
-                            <input type="number" class="form-control text-center fs-4" id="num-comensales" name="num_comensales" min="1" required>
+                            <input type="number" class="form-control text-center fs-4" id="num-comensales" name="num_comensales" min="1">
                             <input type="hidden" id="max-sillas" value="">
                             <div class="error" style="display:none; color:red; margin-top:10px;"></div>
                         </div>
@@ -307,14 +307,14 @@ $clientes = $stmt_clientes->fetchAll(PDO::FETCH_ASSOC);
                     <h5 class="modal-title" id="modalReservarTitulo"><i class="fa-solid fa-calendar-plus"></i> Reservar Mesa</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="../proc/reservar_mesa.php" method="POST">
+                <form id="formReservarSala" action="../proc/reservar_mesa.php" method="POST">
                     <div class="modal-body">
                         <input type="hidden" name="id_mesa" id="reservar_id_mesa">
                         <input type="hidden" name="id_sala" value="<?= $id_sala_actual ?>">
                         
                         <div class="mb-3">
                             <label for="reserva_cliente" class="form-label">Cliente:</label>
-                            <select class="form-select" name="id_cliente" id="reserva_cliente" required>
+                            <select class="form-select" name="id_cliente" id="reserva_cliente">
                                 <option value="" disabled selected>Seleccione Cliente</option>
                                 <?php foreach ($clientes as $c): ?>
                                     <option value="<?= $c['id'] ?>"><?= htmlspecialchars($c['nombre'] . ' ' . $c['apellido']) ?> (<?= htmlspecialchars($c['username']) ?>)</option>
@@ -325,17 +325,17 @@ $clientes = $stmt_clientes->fetchAll(PDO::FETCH_ASSOC);
                         <div class="row">
                             <div class="col-6 mb-3">
                                 <label for="fecha_inicio" class="form-label">Inicio:</label>
-                                <input type="datetime-local" class="form-control" name="fecha_inicio" id="fecha_inicio" required>
+                                <input type="datetime-local" class="form-control" name="fecha_inicio" id="fecha_inicio">
                             </div>
                             <div class="col-6 mb-3">
                                 <label for="fecha_fin" class="form-label">Fin:</label>
-                                <input type="datetime-local" class="form-control" name="fecha_fin" id="fecha_fin" required>
+                                <input type="datetime-local" class="form-control" name="fecha_fin" id="fecha_fin">
                             </div>
                         </div>
 
                         <div class="mb-3">
                             <label for="reserva_comensales" class="form-label">Número de comensales:</label>
-                            <input type="number" class="form-control text-center fs-4" id="reserva_comensales" name="num_comensales" min="1" required>
+                            <input type="number" class="form-control text-center fs-4" id="reserva_comensales" name="num_comensales" min="1">
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -367,6 +367,7 @@ $clientes = $stmt_clientes->fetchAll(PDO::FETCH_ASSOC);
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../js/validar_asignacion.js"></script>
+    <script src="../js/validar_reservas_forms.js"></script>
     <!-- <script src="../js/alert_asignar.js"></script> Eliminado para unificar lógica -->
     <script>
         let editando = false;
@@ -486,10 +487,10 @@ $clientes = $stmt_clientes->fetchAll(PDO::FETCH_ASSOC);
             document.removeEventListener('mouseup', soltarElemento);
         }
 
-        const modalAsignar = new bootstrap.Modal(document.getElementById('modalAsignar'));
-        const modalLiberar = new bootstrap.Modal(document.getElementById('modalLiberar'));
-        const modalReservar = new bootstrap.Modal(document.getElementById('modalReservar'));
-        const modalOpciones = new bootstrap.Modal(document.getElementById('modalOpciones'));
+        const modalAsignar = new bootstrap.Modal(document.getElementById('modalAsignar'), { backdrop: 'static', keyboard: false });
+        const modalLiberar = new bootstrap.Modal(document.getElementById('modalLiberar'), { backdrop: 'static', keyboard: false });
+        const modalReservar = new bootstrap.Modal(document.getElementById('modalReservar'), { backdrop: 'static', keyboard: false });
+        const modalOpciones = new bootstrap.Modal(document.getElementById('modalOpciones'), { backdrop: 'static', keyboard: false });
 
         let selectedMesaId = null;
         let selectedMesaCapacidad = 0;
